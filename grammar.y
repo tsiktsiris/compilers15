@@ -19,19 +19,22 @@ int eval(node *p);
 int yylex(void);
 void yyerror(char *s);
 
-int sym[25];                    // symbol table
+
+int sym[26];                    // symbol table
+
 %}
 
 %union 
 {
     int iValue;                 // integer value
     char sIndex;                // symbol table index
-    node *nPtr;					// node pointer
+    node *nPtr;					// node pointerextern "C" FILE *yyin;
 };
 
 %token <sIndex> IDENTIFIER
 %token <iValue> NUMBER
-%token EQUALS LET IN AND COMMA LP RP TIMES PLUS MINUS _EOF 
+%left MINUS
+%token EQUALS LET IN AND COMMA LP RP TIMES PLUS _EOF 
 
 
 %type <nPtr> expr deflist definition
@@ -48,7 +51,8 @@ expr:
 	| NUMBER 							{ $$ = con($1); }
 	| PLUS LP expr COMMA expr RP 		{ $$ = new_node(PLUS, 2, $3, $5); }
 	| TIMES LP expr COMMA expr RP		{ $$ = new_node(TIMES, 2, $3, $5); }
-
+    | MINUS IDENTIFIER                  { $$ = new_node(MINUS, 1, id($2)); }
+    | MINUS NUMBER                      { $$ = new_node('N', 1, con($2)); }
 	;
 deflist:
 	  definition						
@@ -63,7 +67,7 @@ node *con(int value)
 {
     node *p;
 
-	DEBUG("Allocating %d bytes for CONSTANT %d",sizeof(node),value);
+	//DEBUG("Allocating %d bytes for CONSTANT %d",sizeof(node),value);
 
     if ((p = malloc(sizeof(node))) == NULL) 
 		yyerror("out of memory");
@@ -78,7 +82,7 @@ node *id(int i)
 {
     node *p;
 
-	DEBUG("Allocating %d bytes for ID %d",sizeof(node),i);
+	//DEBUG("Allocating %d bytes for ID %d",sizeof(node),i);
     if ((p = malloc(sizeof(node))) == NULL) 
 		yyerror("out of memory");
 
@@ -94,7 +98,7 @@ node *new_node(int oper, int nops, ...)
     node *p;
     int i;
 
-	DEBUG("Allocating %d bytes for new node (operation %d)",sizeof(node),oper);
+	//DEBUG("Allocating %d bytes for new node (operation %d)",sizeof(node),oper);
 
     if ((p = malloc(sizeof(node))) == NULL) 
 		yyerror("out of memory");
@@ -126,7 +130,7 @@ void free_node(node *p)
             free_node(p->opr.op[i]);
         free(p->opr.op);
     }
-	DEBUG("Releasing node TYPE %d",p->type);
+	//DEBUG("Releasing node TYPE %d",p->type);
     free (p);
 }
 
@@ -135,9 +139,5 @@ void yyerror(char *s)
     fprintf(stdout, "%s\n", s);
 }
 
-int main(void) 
-{
-    yyparse();
-    return 0;
-}
+
 
