@@ -26,7 +26,6 @@ int eval(node *p)
 			case EQUALS:        return sym[p->opr.op[0]->id.i] = eval(p->opr.op[1]); 
 			case PLUS:          return eval(p->opr.op[0]) + eval(p->opr.op[1]);
 			case MINUS:         return -eval(p->opr.op[0]);
-            case 'N':          return -eval(p->opr.op[0]);
 			case TIMES:         return eval(p->opr.op[0]) * eval(p->opr.op[1]); 
 			case AND:           eval(p->opr.op[0]); return eval(p->opr.op[1]); 
 		}

@@ -52,7 +52,7 @@ expr:
 	| PLUS LP expr COMMA expr RP 		{ $$ = new_node(PLUS, 2, $3, $5); }
 	| TIMES LP expr COMMA expr RP		{ $$ = new_node(TIMES, 2, $3, $5); }
     | MINUS IDENTIFIER                  { $$ = new_node(MINUS, 1, id($2)); }
-    | MINUS NUMBER                      { $$ = new_node('N', 1, con($2)); }
+    | MINUS NUMBER                      { $$ = new_node(MINUS, 1, con($2)); }
 	;
 deflist:
 	  definition						
