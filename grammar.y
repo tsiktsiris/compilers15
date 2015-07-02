@@ -20,7 +20,7 @@ int yylex(void);
 void yyerror(char *s);
 
 
-int sym[26];                    // symbol table
+int sym[25];                    // symbol table
 
 %}
 
@@ -28,7 +28,7 @@ int sym[26];                    // symbol table
 {
     int iValue;                 // integer value
     char sIndex;                // symbol table index
-    node *nPtr;					// node pointerextern "C" FILE *yyin;
+    node *nPtr;					// node pointer
 };
 
 %token <sIndex> IDENTIFIER
@@ -67,7 +67,7 @@ node *con(int value)
 {
     node *p;
 
-	//DEBUG("Allocating %d bytes for CONSTANT %d",sizeof(node),value);
+	DEBUG("Allocating %d bytes for CONSTANT %d",sizeof(node),value);
 
     if ((p = malloc(sizeof(node))) == NULL) 
 		yyerror("out of memory");
@@ -82,7 +82,7 @@ node *id(int i)
 {
     node *p;
 
-	//DEBUG("Allocating %d bytes for ID %d",sizeof(node),i);
+	DEBUG("Allocating %d bytes for ID %d",sizeof(node),i);
     if ((p = malloc(sizeof(node))) == NULL) 
 		yyerror("out of memory");
 
@@ -98,7 +98,7 @@ node *new_node(int oper, int nops, ...)
     node *p;
     int i;
 
-	//DEBUG("Allocating %d bytes for new node (operation %d)",sizeof(node),oper);
+	DEBUG("Allocating %d bytes for new node (operation %d)",sizeof(node),oper);
 
     if ((p = malloc(sizeof(node))) == NULL) 
 		yyerror("out of memory");
@@ -130,7 +130,7 @@ void free_node(node *p)
             free_node(p->opr.op[i]);
         free(p->opr.op);
     }
-	//DEBUG("Releasing node TYPE %d",p->type);
+	DEBUG("Releasing node TYPE %d",p->type);
     free (p);
 }
 
